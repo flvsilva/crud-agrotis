@@ -25,7 +25,7 @@ public class Pessoa {
 	private Date dataFinal;
 	
 	@ManyToOne
-	private Propriedade	propriedade;
+	private Propriedade	infosPropriedade;
 	
 	@ManyToOne
 	private Laboratorio laboratorio;
@@ -71,10 +71,10 @@ public class Pessoa {
 	}
 	
 	public Propriedade getPropriedade() {
-		return propriedade;
+		return infosPropriedade;
 	}
 	public void setPropriedade(Propriedade propriedade) {
-		this.propriedade = propriedade;
+		this.infosPropriedade = propriedade;
 	}
 	public Laboratorio getLaboratorio() {
 		return laboratorio;
