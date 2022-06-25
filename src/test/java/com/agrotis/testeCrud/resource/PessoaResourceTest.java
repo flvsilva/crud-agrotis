@@ -1,61 +1,83 @@
 package com.agrotis.testeCrud.resource;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.agrotis.testeCrud.models.Pessoa;
 import com.agrotis.testeCrud.repositories.PessoaRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
 
-@RunWith( SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+@SpringBootTest
 @AutoConfigureMockMvc
 public class PessoaResourceTest {
 	
-    @Autowired
-    private TestRestTemplate testTemplate;
+	@Autowired
+	MockMvc mockMvc;
+	
+	@Autowired
+    ObjectMapper mapper;
+	
+	@MockBean
+	private PessoaRepository pessoaRepository;
+	
 
-    @MockBean
-    private PessoaRepository pessoaRepository;
+	Pessoa p1 = new Pessoa("Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario de teste");
+	Pessoa p2 = new Pessoa("Renata", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario de teste");
+	
+	@Test
+	public void listPessoas() throws Exception{
+		List<Pessoa> cadastros = new ArrayList<Pessoa>();
+		cadastros.add(p1);
+		cadastros.add(p2);
+		pessoaRepository.saveAll(cadastros);
+		Mockito.when(pessoaRepository.findAll()).thenReturn(cadastros);
+		
+		
+		mockMvc.perform(MockMvcRequestBuilders
+		        .get("/pessoas/retornaTodos")
+		        .contentType(MediaType.APPLICATION_JSON))
+		        .andExpect(status().isOk())
+		        .andExpect(jsonPath("$", hasSize(2)))
+		        .andExpect(jsonPath("$[1].nome", is("Renata")));
+		
+	}
+	
+	@Test
+	public void removePessoaPorNome() throws Exception {
+		List<Pessoa> cadastros = new ArrayList<Pessoa>();
+		cadastros.add(p1);
+		cadastros.add(p2);
+		pessoaRepository.saveAll(cadastros);
+		
+		ArrayList<Pessoa> pp = new ArrayList<Pessoa>();
+		pp.add(p2);
+		
+		Mockito.when(pessoaRepository.findByNome(p2.getNome())).thenReturn(pp);
 
-    @TestConfiguration
-    static class Config{
-        @Bean
-        public RestTemplateBuilder restTemplateBuilder(){
-            return new RestTemplateBuilder().basicAuthentication("", "");
-        }
-    }
+	    mockMvc.perform(MockMvcRequestBuilders
+	            .get("/pessoas/remover/Renata")
+	            .contentType(MediaType.APPLICATION_JSON))
+	            .andExpect(status().isOk());
+	}
 
-   @Test
-   public void listPessoas(){
-       Pessoa Pessoa = new Pessoa("Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente");
-       BDDMockito.when(pessoaRepository.findAll()).thenReturn(Collections.singletonList(Pessoa));
-       testTemplate = testTemplate.withBasicAuth("1", "1");
-       ResponseEntity<String> response = testTemplate.getForEntity("/Pessoas", String.class);
-       Assertions.assertThat(response.getStatusCodeValue()).isEqualTo(200);
-   }
-
-   @Test
-   public void getHello(){
-       testTemplate = testTemplate.withBasicAuth("1", "1");
-       ResponseEntity<String> response = testTemplate.getForEntity("/", String.class);
-       Assertions.assertThat(response.getStatusCodeValue()).isEqualTo(200);
-       Assertions.assertThat(response.getBody()).isEqualTo("API de teste - CRUD - Agrotis");
-   }
 
 }
