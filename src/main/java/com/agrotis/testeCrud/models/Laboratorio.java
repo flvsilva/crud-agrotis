@@ -14,7 +14,15 @@ public class Laboratorio {
 
 	@Column(name = "nome")
 	private String nome;
+		
+	public Laboratorio() {
+	}
 	
+	public Laboratorio(int id, String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+	}
 	public int getId() {
 		return id;
 	}

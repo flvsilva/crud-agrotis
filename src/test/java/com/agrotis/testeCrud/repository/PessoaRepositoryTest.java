@@ -25,6 +25,8 @@ public class PessoaRepositoryTest {
     public void save(){
         Pessoa Pessoa = new Pessoa("Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Pessoa com pedidos recorrentes");
         assertThat(pessoaRepository.findAll().size()).isEqualTo(0);
+        
+        
         pessoaRepository.save(Pessoa);
         assertThat(Pessoa.getId()).isNotNull();
         assertThat(Pessoa.getNome()).isEqualTo("Felipe");
