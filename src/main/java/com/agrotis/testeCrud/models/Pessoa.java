@@ -30,6 +30,11 @@ public class Pessoa {
 	@Column
 	private String observacao;
 	
+	public Pessoa(String nome) {
+		super();
+		this.nome = nome;
+	}
+	
 	public int getId() {
 		return id;
 	}
