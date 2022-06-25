@@ -2,9 +2,10 @@ package com.agrotis.testeCrud.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Rule;
+import java.time.Instant;
+import java.util.Date;
+
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,12 +21,9 @@ public class PessoaRepositoryTest {
 	@Autowired
     private PessoaRepository pessoaRepository;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void save(){
-        Pessoa Pessoa = new Pessoa("Felipe");
+        Pessoa Pessoa = new Pessoa("Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Pessoa com pedidos recorrentes");
         assertThat(pessoaRepository.findAll().size()).isEqualTo(0);
         pessoaRepository.save(Pessoa);
         assertThat(Pessoa.getId()).isNotNull();

@@ -30,11 +30,18 @@ public class Pessoa {
 	@Column
 	private String observacao;
 	
-	public Pessoa(String nome) {
+	public Pessoa(String nome, Date dataInicial, Date dataFinal, String observacao) {
 		super();
 		this.nome = nome;
+		this.dataInicial = dataInicial;
+		this.dataFinal = dataFinal;
+		this.observacao = observacao;
 	}
 	
+	public Pessoa() {
+	
+	}
+
 	public int getId() {
 		return id;
 	}
