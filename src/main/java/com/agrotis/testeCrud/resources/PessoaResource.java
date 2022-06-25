@@ -81,7 +81,7 @@ public class PessoaResource {
 			return new ResponseEntity<String>("Pessoa com nome " + nome + " removida", HttpStatus.OK);
 		}catch (IndexOutOfBoundsException noResult) {
 			logger.info("Pessoa com nome " + nome + " não encontrada");
-			return new ResponseEntity<String>("Pessoa com nome " + nome + " não encontrada.",HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Pessoa com nome " + nome + " não encontrada.",HttpStatus.BAD_REQUEST);
 		}
 	}
 	
