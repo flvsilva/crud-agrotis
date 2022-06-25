@@ -70,10 +70,10 @@ public class Pessoa {
 		this.dataFinal = dataFinal;
 	}
 	
-	public Propriedade getPropriedade() {
+	public Propriedade getInfosPropriedade() {
 		return infosPropriedade;
 	}
-	public void setPropriedade(Propriedade propriedade) {
+	public void setInfosPropriedade(Propriedade propriedade) {
 		this.infosPropriedade = propriedade;
 	}
 	public Laboratorio getLaboratorio() {

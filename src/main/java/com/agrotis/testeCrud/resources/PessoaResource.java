@@ -91,7 +91,7 @@ public class PessoaResource {
 		pExistente.setDataInicial(paramPessoa.getDataInicial());
 		pExistente.setObservacao(paramPessoa.getObservacao());
 		pExistente.setLaboratorio(paramPessoa.getLaboratorio());
-		pExistente.setPropriedade(paramPessoa.getPropriedade());
+		pExistente.setInfosPropriedade(paramPessoa.getInfosPropriedade());
 		
 		pessoaRepository.save(pExistente);
 		//FIXME Não foi tratado o caso da atualização de cadastro vir "com problema"

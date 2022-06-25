@@ -8,7 +8,6 @@ import javax.persistence.Id;
 @Entity
 public class Laboratorio {
 	
-	@GeneratedValue
 	@Id
 	private int id;
 
