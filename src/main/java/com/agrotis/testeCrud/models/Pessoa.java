@@ -6,6 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 public class Pessoa {
@@ -23,9 +28,11 @@ public class Pessoa {
 	@Column(name = "dataFinal")
 	private Date dataFinal;
 	
-//	private Propriedade	propriedade;
+	@ManyToOne
+	private Propriedade	propriedade;
 	
-	//private Laboratorio laboratorio;
+	@ManyToOne
+	private Laboratorio laboratorio;
 	
 	@Column
 	private String observacao;
@@ -66,7 +73,7 @@ public class Pessoa {
 	public void setDataFinal(Date dataFinal) {
 		this.dataFinal = dataFinal;
 	}
-	/*
+	
 	public Propriedade getPropriedade() {
 		return propriedade;
 	}
@@ -78,7 +85,7 @@ public class Pessoa {
 	}
 	public void setLaboratorio(Laboratorio laboratorio) {
 		this.laboratorio = laboratorio;
-	}*/
+	}
 	public String getObservacao() {
 		return observacao;
 	}

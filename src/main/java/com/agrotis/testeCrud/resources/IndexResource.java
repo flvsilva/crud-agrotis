@@ -20,13 +20,17 @@ public class IndexResource {
 	
 	@GetMapping
 	public String getIndex() {
+		salvaDadosTeste();
+		return "API de teste - CRUD - Agrotis";
+	}
+
+	private void salvaDadosTeste() {
 		pr.save(new Pessoa("Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
 		pr.save(new Pessoa("Renata", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
 		pr.save(new Pessoa("Apolo", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
 		pr.save(new Pessoa("Nalah", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
 		pr.save(new Pessoa("Frajola", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
 		pr.save(new Pessoa("Rajada", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
-		return "API de teste - CRUD - Agrotis";
 	}
 
 }

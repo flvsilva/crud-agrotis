@@ -2,7 +2,8 @@ package com.agrotis.testeCrud.resources;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+
+import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,39 +44,39 @@ public class PessoaResource {
 	}
 	
 	@ApiOperation("Consulta pessoa pelo nome.")
-	@GetMapping(path="/{nome}")
-	public ResponseEntity<Optional<Pessoa>> getByNome(@PathVariable String nome){
-		Optional<Pessoa> Pessoa;
-		try {
-			Pessoa = Optional.ofNullable(pessoaRepository.getByNome(nome));
-			logger.info("Pessoa com nome: " + nome + " encontrada");
-			return new ResponseEntity<Optional<Pessoa>>(Pessoa, HttpStatus.OK);
-		}catch (NoSuchElementException nsee) {
-			logger.info("Pessoa com nome: " + nome + " não encontrada");
-			return new ResponseEntity<Optional<Pessoa>>(HttpStatus.NOT_FOUND);
-		}
+	@GetMapping(path="/buscaPorNome/{nome}")
+	public ResponseEntity<List<Pessoa>> buscaPorNome(@PathVariable String nome){
+		List<Pessoa> pessoa = pessoaRepository.findByNome(nome);
+		
+		if (pessoa.size() > 0) {
+			logger.info("Pessoa com nome: " + nome + " encontrada");			
+			return new ResponseEntity<List<Pessoa>>(pessoa, HttpStatus.OK);
+		} 
+
+		logger.info("Pessoa com nome: " + nome + " não existe.");
+		return new ResponseEntity<List<Pessoa>>(pessoa,HttpStatus.NOT_FOUND);
+		
 	}
 	
 	
 	@ApiOperation("Remove pessoa pelo nome.")
-	@GetMapping(path="/Remover/{nome}")
+	@GetMapping(path="/Remover/{nome}")	
 	public ResponseEntity<String> removePorNome(@PathVariable String nome){
-		Pessoa pessoa;
 		try {
-			System.out.println("começou");
-			pessoa = pessoaRepository.getByNome(nome);
-			logger.info("Pessoa com nome: " + nome + " encontrada");
-			pessoaRepository.delete(pessoa);
-			logger.info("Pessoa com nome: " + nome + " removida");
-			return new ResponseEntity(HttpStatus.OK);
-		}catch (Exception nsee) {
-			logger.info("Pessoa com nome: " + nome + " não encontrada");
-			return new ResponseEntity("Pessoa com nome: " + nome + " não encontrada.",HttpStatus.OK);
+			//TODO tomei como verdade que podemos ter mais de um registro com o mesmo nome, o primeiro é removido, para simplificar a solução.
+			pessoaRepository.delete(pessoaRepository.findByNome(nome).get(0));
+			logger.info("Pessoa com nome " + nome + " removida");
+			return new ResponseEntity<String>("Pessoa com nome " + nome + " removida", HttpStatus.OK);
+		}catch (IndexOutOfBoundsException noResult) {
+			logger.info("Pessoa com nome " + nome + " não encontrada");
+			return new ResponseEntity<String>("Pessoa com nome " + nome + " não encontrada.",HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
 
 	/*
-	 *TODO: Insert, Update / Dados de terreno/laboratorio 	 
+	 *TODO: Insert, Update  	 
 	 * 
 	 * 
 	 */

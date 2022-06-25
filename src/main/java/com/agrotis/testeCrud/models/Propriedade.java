@@ -1,9 +1,11 @@
 package com.agrotis.testeCrud.models;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+@Entity
 public class Propriedade {
 	
 	@GeneratedValue
@@ -15,7 +17,16 @@ public class Propriedade {
 
 	@Column(name = "cnpj")
 	private String cnpj;
+		
+	public Propriedade() {
+		
+	}
 	
+	public Propriedade(String nome, String cnpj) {
+		super();
+		this.nome = nome;
+		this.cnpj = cnpj;
+	}
 	public int getId() {
 		return id;
 	}
