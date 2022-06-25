@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class PessoaResource {
 		} 
 
 		logger.info("Pessoa com nome: " + nome + " não existe.");
-		return new ResponseEntity<List<Pessoa>>(pessoa,HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<Pessoa>>(pessoa,HttpStatus.BAD_GATEWAY);
 		
 	}
 	
@@ -88,16 +89,19 @@ public class PessoaResource {
 	@ApiOperation("Atualiza um cadastro existente.") 
 	@PostMapping(path="/cadastro/atualizar")	
 	public ResponseEntity<String> atualizaCadastro (@RequestBody Pessoa paramPessoa) {
-		Pessoa pExistente = pessoaRepository.findByNome(paramPessoa.getNome()).get(0);
-		pExistente.setDataFinal(paramPessoa.getDataFinal());
-		pExistente.setDataInicial(paramPessoa.getDataInicial());
-		pExistente.setObservacao(paramPessoa.getObservacao());
-		pExistente.setLaboratorio(paramPessoa.getLaboratorio());
-		pExistente.setInfosPropriedade(paramPessoa.getInfosPropriedade());
-		
-		pessoaRepository.save(pExistente);
-		//FIXME Não foi tratado o caso da atualização de cadastro vir "com problema"
-		return new ResponseEntity<String>("Cadastro atualizado com sucesso.", HttpStatus.OK);
+		try {
+			Optional<Pessoa> pExistente = pessoaRepository.findById(paramPessoa.getId());
+			pExistente.get().setNome(paramPessoa.getNome());
+			pExistente.get().setDataFinal(paramPessoa.getDataFinal());
+			pExistente.get().setDataInicial(paramPessoa.getDataInicial());
+			pExistente.get().setObservacao(paramPessoa.getObservacao());
+			pExistente.get().setLaboratorio(paramPessoa.getLaboratorio());
+			pExistente.get().setInfosPropriedade(paramPessoa.getInfosPropriedade());
+			pessoaRepository.save(pExistente.get());
+			return new ResponseEntity<String>("Cadastro atualizado com sucesso.", HttpStatus.OK);	
+		} catch (IndexOutOfBoundsException noResult) {
+			return new ResponseEntity<String>("Pessoa não encontrada, atualização não realizada.", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@ApiOperation("Faz uma carga inicial de cadastros de pessoa.") 
@@ -108,12 +112,12 @@ public class PessoaResource {
 	}
 
 	private void salvaDadosTeste() {
-		pessoaRepository.save(new Pessoa("Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
-		pessoaRepository.save(new Pessoa("Renata", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
-		pessoaRepository.save(new Pessoa("Apolo", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
-		pessoaRepository.save(new Pessoa("Nalah", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
-		pessoaRepository.save(new Pessoa("Frajola", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
-		pessoaRepository.save(new Pessoa("Rajada", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
+		pessoaRepository.save(new Pessoa(1,"Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
+		pessoaRepository.save(new Pessoa(2,"Renata", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
+		pessoaRepository.save(new Pessoa(3,"Apolo", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
+		pessoaRepository.save(new Pessoa(4,"Nalah", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
+		pessoaRepository.save(new Pessoa(5,"Frajola", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
+		pessoaRepository.save(new Pessoa(6,"Rajada", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario cadastrado automaticamente"));
 	}
 
 

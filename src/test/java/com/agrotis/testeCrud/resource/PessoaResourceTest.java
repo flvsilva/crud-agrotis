@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -41,8 +42,8 @@ public class PessoaResourceTest {
 	private PessoaRepository pessoaRepository;
 	
 
-	Pessoa p1 = new Pessoa("Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario de teste");
-	Pessoa p2 = new Pessoa("Renata", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario de teste");
+	Pessoa p1 = new Pessoa(1,"Felipe", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario de teste");
+	Pessoa p2 = new Pessoa(2,"Renata", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Usuario de teste");
 	
 	@Test
 	public void listPessoas() throws Exception{
@@ -89,7 +90,7 @@ public class PessoaResourceTest {
 	
 	@Test
 	public void cadastrarPessoa() throws Exception {
-	    Pessoa p = new Pessoa("John Rambo", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Cadastrado via teste unitário");
+	    Pessoa p = new Pessoa(3,"John Rambo", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(99999999)), "Cadastrado via teste unitário");
 
 	    Mockito.when(pessoaRepository.save(p)).thenReturn(p);
 
@@ -102,6 +103,25 @@ public class PessoaResourceTest {
 	            .andExpect(status().isOk())
 	            .andExpect(jsonPath("$", notNullValue()));
 	    }
+	
+	@Test
+	public void updateCadastroPessoa() throws Exception {
+	    Pessoa updatedPessoa = new Pessoa(1,"Rocky Balboa", Date.from(Instant.now()), Date.from(Instant.now().plusSeconds(10000)), "Atualizado via teste unitário de update");
+
+		Mockito.when(pessoaRepository.findById(p1.getId())).thenReturn(Optional.of(p1));
+	    Mockito.when(pessoaRepository.save(p1)).thenReturn(updatedPessoa);
+
+	    MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/pessoas/cadastro/atualizar")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .accept(MediaType.APPLICATION_JSON)
+	            .content(this.mapper.writeValueAsString(updatedPessoa));
+
+	    mockMvc.perform(mockRequest)
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$", notNullValue()))
+	            .andExpect(jsonPath("$", is("Cadastro atualizado com sucesso.")));
+	    
+	}
 	
 	
 

@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Pessoa {
 	
-	@GeneratedValue
 	@Id
 	private int id;
 	
@@ -33,8 +32,9 @@ public class Pessoa {
 	@Column
 	private String observacao;
 	
-	public Pessoa(String nome, Date dataInicial, Date dataFinal, String observacao) {
+	public Pessoa(int id, String nome, Date dataInicial, Date dataFinal, String observacao) {
 		super();
+		this.id = id;
 		this.nome = nome;
 		this.dataInicial = dataInicial;
 		this.dataFinal = dataFinal;
