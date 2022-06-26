@@ -1,0 +1,11 @@
+---
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0"
+  title: ""
+host: virtserver.swaggerhub.com
+basePath: /home9984/crud-agrotis/1.0
+schemes:
+- https
+paths: {}
