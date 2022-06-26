@@ -34,7 +34,7 @@ https://crud-agrotis.herokuapp.com/
 | GET | Listar todas as propriedades | retornaTodas |
 | POST | Cadastrar propriedade | cadastro |
 
-* **Laboratorios**
+* **Laboratorios** - https://crud-agrotis.herokuapp.com/laboratorios/
 
 | Método | Função | Path |
 |---|---|---|
